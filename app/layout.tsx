@@ -21,13 +21,13 @@ export default function RootLayout({
             height={24}
             width={24}
             alt="habits logo"
-            className="mr-2"
+            className="mr-4"
             priority
           />
-          <span className="font-bold">habits</span>
+          <span className="font-bold">Habit Tracker</span>
         </header>
 
-        <main className="h-full flex items-center justify-center flex-1">
+        <main className="h-full flex items-center justify-center flex-1 px-4">
           {children}
         </main>
 
