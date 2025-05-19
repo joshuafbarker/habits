@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { toggleFirstVisit, addHabit } from "@/lib/actions";
 
-export default function AddHabit() {
+interface Props {
+  placeholder?: string;
+}
+
+export default function AddHabit({ placeholder }: Props) {
   const [habit, setHabit] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -22,7 +26,7 @@ export default function AddHabit() {
         type="text"
         value={habit}
         onChange={(e) => setHabit(e.target.value)}
-        placeholder="Enter your first habit"
+        placeholder={placeholder || "Enter your first habit"}
         className="flex-1 border border-slate-200 rounded py-2 px-3 mr-2 focus:outline-sky-700"
       />
       <button

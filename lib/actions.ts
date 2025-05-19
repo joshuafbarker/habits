@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import type { Habit } from "@/types";
 
 export async function toggleFirstVisit() {
   const cookieStore = await cookies();
@@ -26,6 +27,37 @@ export async function getFirstVisit() {
   return false;
 }
 
+export async function getHabits() {
+  const cookieStore = await cookies();
+
+  // get the habits from the cookie store
+  const habits = cookieStore.get("habits");
+
+  // if the habits exist, parse them and return them
+  if (habits) {
+    const parsedHabits = JSON.parse(habits.value);
+
+    // loop through the habits and check if their dateCompleted
+    // matches today's date
+    // if it doesn't, set completed to false
+    const today = new Date().toISOString().split("T")[0];
+    const updatedHabits = parsedHabits.map((habit: Habit) => {
+      if (habit.dateCompleted?.split("T")[0] !== today) {
+        return {
+          ...habit,
+          completed: false,
+        };
+      }
+      return habit;
+    });
+
+    return updatedHabits;
+  }
+
+  // if the habits don't exist, return an empty array
+  return [];
+}
+
 export async function addHabit(habit: string) {
   const cookieStore = await cookies();
 
@@ -35,7 +67,11 @@ export async function addHabit(habit: string) {
   // if the habits exist, parse them and add the new habit
   if (habits) {
     const parsedHabits = JSON.parse(habits.value);
-    parsedHabits.push(habit);
+    parsedHabits.push({
+      id: parsedHabits.length + 1,
+      name: habit,
+      completed: false,
+    });
 
     // set the new habits in the cookie store
     cookieStore.set({
@@ -46,22 +82,62 @@ export async function addHabit(habit: string) {
     // if the habits don't exist, create a new array with the new habit
     cookieStore.set({
       name: "habits",
-      value: JSON.stringify([habit]),
+      value: JSON.stringify([
+        {
+          id: 1,
+          name: habit,
+          completed: false,
+        },
+      ]),
     });
   }
 }
 
-export async function getHabits() {
+export async function completeHabit(id: number) {
   const cookieStore = await cookies();
 
   // get the habits from the cookie store
   const habits = cookieStore.get("habits");
 
-  // if the habits exist, parse them and return them
+  // if the habits exist, parse them and update the completed status of the habit
   if (habits) {
-    return JSON.parse(habits.value);
-  }
+    const parsedHabits = JSON.parse(habits.value);
+    const updatedHabits = parsedHabits.map((habit: Habit) => {
+      if (habit.id === id) {
+        return {
+          ...habit,
+          completed: !habit.completed,
+          dateCompleted: new Date().toISOString(),
+        };
+      }
+      return habit;
+    });
 
-  // if the habits don't exist, return an empty array
-  return [];
+    // set the new habits in the cookie store
+    cookieStore.set({
+      name: "habits",
+      value: JSON.stringify(updatedHabits),
+    });
+  }
+}
+
+export async function deleteHabit(id: number) {
+  const cookieStore = await cookies();
+
+  // get the habits from the cookie store
+  const habits = cookieStore.get("habits");
+
+  // if the habits exist, parse them and remove the habit
+  if (habits) {
+    const parsedHabits = JSON.parse(habits.value);
+    const updatedHabits = parsedHabits.filter(
+      (habit: Habit) => habit.id !== id,
+    );
+
+    // set the new habits in the cookie store
+    cookieStore.set({
+      name: "habits",
+      value: JSON.stringify(updatedHabits),
+    });
+  }
 }
