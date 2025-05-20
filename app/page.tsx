@@ -11,10 +11,6 @@ export default async function Home() {
     return <FirstHabit />;
   }
 
-  // if the user has habits, return the habits component
-  if (habits.length > 0) {
-    return <Habits habits={habits} />;
-  }
-
-  return null;
+  // return the habits component
+  return <Habits habits={habits} />;
 }

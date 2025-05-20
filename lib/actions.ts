@@ -3,16 +3,6 @@
 import { cookies } from "next/headers";
 import type { Habit } from "@/types";
 
-export async function toggleFirstVisit() {
-  const cookieStore = await cookies();
-
-  // set the first visit cookie to false
-  cookieStore.set({
-    name: "first_visit",
-    value: "false",
-  });
-}
-
 export async function getFirstVisit() {
   const cookieStore = await cookies();
 
@@ -27,6 +17,16 @@ export async function getFirstVisit() {
   return false;
 }
 
+export async function toggleFirstVisit() {
+  const cookieStore = await cookies();
+
+  // set the first visit cookie to false
+  cookieStore.set({
+    name: "first_visit",
+    value: "false",
+  });
+}
+
 export async function getHabits() {
   const cookieStore = await cookies();
 
@@ -35,19 +35,37 @@ export async function getHabits() {
 
   // if the habits exist, parse them and return them
   if (habits) {
-    const parsedHabits = JSON.parse(habits.value);
+    const parsedHabits: Habit[] = JSON.parse(habits.value);
 
     // loop through the habits and check if their dateCompleted
     // matches today's date
     // if it doesn't, set completed to false
     const today = new Date().toISOString().split("T")[0];
+    const yesterday = new Date(Date.now() - 864e5).toISOString().split("T")[0];
+
     const updatedHabits = parsedHabits.map((habit: Habit) => {
+      // if the habit was completed today, return the habit as is
+      if (habit.dateCompleted?.split("T")[0] === today) {
+        return habit;
+      }
+
+      // if the habit was not completed today, set completed to false
       if (habit.dateCompleted?.split("T")[0] !== today) {
         return {
           ...habit,
           completed: false,
         };
       }
+
+      // if the habit was not completed yesterday, set the streak to 0
+      if (habit.dateCompleted?.split("T")[0] !== yesterday) {
+        return {
+          ...habit,
+          streak: 0,
+        };
+      }
+
+      // return any other habits that dont match the above conditions
       return habit;
     });
 
@@ -66,11 +84,12 @@ export async function addHabit(habit: string) {
 
   // if the habits exist, parse them and add the new habit
   if (habits) {
-    const parsedHabits = JSON.parse(habits.value);
+    const parsedHabits: Habit[] = JSON.parse(habits.value);
     parsedHabits.push({
       id: parsedHabits.length + 1,
       name: habit,
       completed: false,
+      streak: 0,
     });
 
     // set the new habits in the cookie store
@@ -87,6 +106,7 @@ export async function addHabit(habit: string) {
           id: 1,
           name: habit,
           completed: false,
+          streak: 0,
         },
       ]),
     });
@@ -100,16 +120,20 @@ export async function completeHabit(id: number) {
   const habits = cookieStore.get("habits");
 
   // if the habits exist, parse them and update the completed status of the habit
+  // and set the dateCompleted to today's date
+  // then increase the streak of the habit by 1
   if (habits) {
-    const parsedHabits = JSON.parse(habits.value);
+    const parsedHabits: Habit[] = JSON.parse(habits.value);
     const updatedHabits = parsedHabits.map((habit: Habit) => {
       if (habit.id === id) {
         return {
           ...habit,
-          completed: !habit.completed,
+          completed: true,
           dateCompleted: new Date().toISOString(),
+          streak: habit.streak + 1,
         };
       }
+
       return habit;
     });
 
@@ -129,7 +153,7 @@ export async function deleteHabit(id: number) {
 
   // if the habits exist, parse them and remove the habit
   if (habits) {
-    const parsedHabits = JSON.parse(habits.value);
+    const parsedHabits: Habit[] = JSON.parse(habits.value);
     const updatedHabits = parsedHabits.filter(
       (habit: Habit) => habit.id !== id,
     );

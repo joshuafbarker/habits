@@ -10,7 +10,7 @@ export default function FirstHabit() {
         No account necessary.
       </h1>
 
-      <AddHabit />
+      <AddHabit firstVisit />
     </div>
   );
 }

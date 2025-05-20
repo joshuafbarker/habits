@@ -7,7 +7,9 @@ export default function Habits({ habits }: { habits: Habit[] }) {
 
   return (
     <div className="flex flex-wrap max-w-4xl w-full">
-      <h1 className="basis-full">Your Habits</h1>
+      <h1 className="basis-full font-semibold mb-4 border-b border-b-slate-400 border-dotted">
+        Your Habits
+      </h1>
 
       <ul className="w-full">
         {items.map((habit: Habit, index) => (
@@ -16,6 +18,7 @@ export default function Habits({ habits }: { habits: Habit[] }) {
             id={habit.id}
             name={habit.name}
             isCompleted={habit.completed}
+            streak={habit.streak}
           />
         ))}
       </ul>
