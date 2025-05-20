@@ -40,7 +40,7 @@ export default function HabitItem({ id, name, isCompleted, streak }: Props) {
         ) : null}
       </div>
 
-      {isCompleted ? null : (
+      {!name || isCompleted ? null : (
         <button
           className="cursor-pointer mx-1 size-6 rounded-full hover:bg-emerald-200 flex items-center justify-center"
           onClick={() => handleClick(id, "complete")}
@@ -62,25 +62,27 @@ export default function HabitItem({ id, name, isCompleted, streak }: Props) {
         </button>
       )}
 
-      <button
-        className="cursor-pointer mx-1 size-6 rounded-full hover:bg-red-200 flex items-center justify-center"
-        onClick={() => handleClick(id, "delete")}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="size-4"
+      {!name ? null : (
+        <button
+          className="cursor-pointer mx-1 size-6 rounded-full hover:bg-red-200 flex items-center justify-center"
+          onClick={() => handleClick(id, "delete")}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M6 18 18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-4"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18 18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      )}
     </li>
   );
 }
