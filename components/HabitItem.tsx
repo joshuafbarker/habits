@@ -32,7 +32,7 @@ export default function HabitItem({ id, name, isCompleted, streak }: Props) {
         {name ? (
           <h2 className="font-semibold">{name}</h2>
         ) : (
-          <AddHabit placeholder="New habit..." hideButton />
+          <AddHabit placeholder="New habit..." hideButton noBorder />
         )}
 
         {streak > 0 ? (

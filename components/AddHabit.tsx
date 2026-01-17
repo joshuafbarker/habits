@@ -2,17 +2,20 @@
 
 import { useState } from "react";
 import { toggleFirstVisit, addHabit } from "@/lib/actions";
+import cn from "classnames";
 
 interface Props {
   placeholder?: string;
   hideButton?: boolean;
   firstVisit?: boolean;
+  noBorder?: boolean;
 }
 
 export default function AddHabit({
   placeholder,
   hideButton,
   firstVisit,
+  noBorder,
 }: Props) {
   const [habit, setHabit] = useState("");
 
@@ -40,7 +43,10 @@ export default function AddHabit({
         value={habit}
         onChange={(e) => setHabit(e.target.value)}
         placeholder={placeholder || "Enter your first habit"}
-        className="flex-1 border border-zinc-300 dark:border-zinc-700 rounded py-2 px-3 mr-2 focus:border-sky-700 focus:outline-0"
+        className={cn(
+          !noBorder && "border",
+          "flex-1 border-zinc-300 dark:border-zinc-700 rounded py-2 px-3 mr-2 focus:border-sky-700 focus:outline-0",
+        )}
       />
 
       {hideButton ? null : (
