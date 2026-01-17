@@ -22,10 +22,10 @@ export default function HabitItem({ id, name, isCompleted, streak }: Props) {
     <li
       key={id}
       className={cn(
-        "mb-2 border border-zinc-300 dark:border-zinc-700 rounded p-4 flex min-h-16 items-center",
+        "mb-2 border rounded p-4 flex min-h-16 items-center",
         isCompleted
-          ? "border-green-300 bg-green-50 dark:bg-green-900"
-          : "border-slate-300",
+          ? "border-green-400 bg-green-100 dark:border-green-700 dark:bg-green-900/20"
+          : "border-zinc-300 dark:border-zinc-700",
       )}
     >
       <div className="flex-1">
@@ -36,7 +36,16 @@ export default function HabitItem({ id, name, isCompleted, streak }: Props) {
         )}
 
         {streak > 0 ? (
-          <span className="text-sm text-zinc-500">{streak} day streak</span>
+          <span
+            className={cn(
+              "text-sm",
+              isCompleted
+                ? "text-green-700 dark:text-green-300"
+                : "text-zinc-500",
+            )}
+          >
+            {streak} day streak
+          </span>
         ) : null}
       </div>
 
