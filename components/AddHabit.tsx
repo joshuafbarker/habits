@@ -40,7 +40,7 @@ export default function AddHabit({
         value={habit}
         onChange={(e) => setHabit(e.target.value)}
         placeholder={placeholder || "Enter your first habit"}
-        className="flex-1 border border-slate-200 rounded py-2 px-3 mr-2 focus:outline-sky-700"
+        className="flex-1 border border-zinc-300 dark:border-zinc-700 rounded py-2 px-3 mr-2 focus:border-sky-700 focus:outline-0"
       />
 
       {hideButton ? null : (
