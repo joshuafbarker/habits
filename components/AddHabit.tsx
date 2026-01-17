@@ -46,7 +46,7 @@ export default function AddHabit({
       {hideButton ? null : (
         <button
           type="submit"
-          className="py-1 px-4 bg-sky-700 text-white rounded font-bold cursor-pointer hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-700 focus:ring-offset-2"
+          className="py-1 px-4 bg-sky-700 text-white rounded font-bold cursor-pointer hover:bg-sky-800 focus:outline-2 outline-white"
         >
           Add Habit
         </button>
